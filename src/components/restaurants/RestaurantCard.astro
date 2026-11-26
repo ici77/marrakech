@@ -1,0 +1,60 @@
+---
+import type { MarrakechRestaurant } from '../../types/travel';
+import TravelImage from '../media/TravelImage.astro';
+
+interface Props { restaurant: MarrakechRestaurant; compact?: boolean; featured?: boolean }
+const { restaurant, compact = false, featured = false } = Astro.props;
+const mapsUrl = restaurant.maps ?? `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${restaurant.name}, Marrakech`)}`;
+const hasPrice = restaurant.price && restaurant.price !== 'Pendiente';
+---
+
+<article class:list={['restaurant-card', { compact, featured }]} data-restaurant-card>
+  {restaurant.image && <TravelImage image={restaurant.image} class="restaurant-photo" loading={featured ? 'eager' : 'lazy'} priority={featured} showCredit={false} />}
+  <div class="restaurant-card__body">
+    <div class="restaurant-card__topline"><p class="eyebrow">{restaurant.cuisine}</p>{restaurant.reservationStatus && <span class="restaurant-status">{restaurant.reservationStatus.replaceAll('_', ' ')}</span>}</div>
+    <h3>{restaurant.name}</h3>
+    <p class="restaurant-zone">{restaurant.zone}{restaurant.address && ` · ${restaurant.address}`}</p>
+    {!compact && <p class="restaurant-description">{restaurant.description}</p>}
+    <div class="restaurant-price">
+      {hasPrice && <p><span>Para cinco</span><strong>{restaurant.priceForFive ?? restaurant.price}</strong></p>}
+      {restaurant.priceKind === 'confirmado' && <small>Importe de vuestra reserva</small>}
+      {restaurant.priceSource && <small>Fuente: <a href={restaurant.priceSource} target="_blank" rel="noreferrer">carta o web oficial</a>{restaurant.priceCheckedAt && ` · comprobado ${restaurant.priceCheckedAt}`}</small>}
+    </div>
+    <div class="restaurant-links">
+      {restaurant.website && <a href={restaurant.website} target="_blank" rel="noreferrer">Web</a>}
+      {restaurant.menu && <a href={restaurant.menu} target="_blank" rel="noreferrer">Carta</a>}
+      <a href={mapsUrl} target="_blank" rel="noreferrer">Google Maps</a>
+      <a href={`/restaurantes/${restaurant.id}/`}>Ficha</a>
+    </div>
+    <div class="restaurant-actions">
+      <button class="favorite" data-favorite={restaurant.id} aria-pressed="false">Guardar favorito ♡</button>
+      <button class="visited" data-restaurant-visited={restaurant.id} aria-pressed="false">Marcar visitado</button>
+    </div>
+  </div>
+</article>
+
+<script>
+  import { readProgress, setProgressState } from '../../lib/trip-progress';
+  const buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-restaurant-visited]'));
+  const render = () => {
+    const progress = readProgress();
+    buttons.forEach((button) => {
+      const id = button.dataset.restaurantVisited;
+      const visited = Boolean(id && progress.restaurants[id]?.state === 'completed');
+      button.setAttribute('aria-pressed', String(visited));
+      button.textContent = visited ? 'Visitado ✓' : 'Marcar visitado';
+    });
+  };
+  buttons.forEach((button) => button.addEventListener('click', () => {
+    const id = button.dataset.restaurantVisited;
+    if (!id) return;
+    const visited = button.getAttribute('aria-pressed') === 'true';
+    setProgressState('restaurants', id, visited ? 'pending' : 'completed');
+    render();
+  }));
+  render();
+</script>
+
+<style>
+  .restaurant-card{display:grid;grid-template-columns:minmax(0,1fr);background:var(--white);border:1px solid color-mix(in srgb,var(--gold) 32%,transparent);box-shadow:0 10px 28px #162d2910;overflow:hidden}.restaurant-card:has(.restaurant-photo){grid-template-columns:minmax(190px,.7fr) minmax(0,1fr)}.restaurant-card__body{padding:1.25rem;display:flex;flex-direction:column;gap:.65rem}.restaurant-photo{min-height:100%;height:100%}.restaurant-photo :global(img){min-height:100%;aspect-ratio:4/3}.restaurant-card__topline{display:flex;justify-content:space-between;gap:.6rem;align-items:start}.restaurant-card .eyebrow{margin:0;color:var(--terra)}.restaurant-card h3{font-family:var(--font-display);font-size:clamp(1.5rem,3vw,2.05rem);line-height:1.02;margin:0;color:var(--deep)}.restaurant-zone{font-size:.87rem;color:var(--muted);margin:0}.restaurant-description{margin:0;line-height:1.55}.restaurant-status{font-size:.7rem;line-height:1;text-transform:uppercase;letter-spacing:.07em;background:#f9ded2;color:#803b25;padding:.45rem .55rem;border-radius:999px;font-weight:800}.restaurant-price{display:flex;align-items:baseline;gap:.6rem;flex-wrap:wrap;border-top:1px solid var(--beige);padding-top:.65rem}.restaurant-price p{margin:0;display:flex;gap:.4rem;align-items:baseline}.restaurant-price span,.restaurant-price small{font-size:.72rem;color:var(--muted)}.restaurant-price strong{color:var(--terra)}.restaurant-links,.restaurant-actions{display:flex;gap:.45rem;flex-wrap:wrap}.restaurant-links a{font-size:.8rem;color:var(--deep);font-weight:750;text-decoration:underline;text-underline-offset:3px}.restaurant-actions{margin-top:auto}.restaurant-actions button{font:inherit;font-size:.78rem;padding:.42rem .58rem;border:1px solid var(--deep);background:transparent;color:var(--deep);cursor:pointer}.restaurant-actions .visited[aria-pressed="true"]{background:var(--deep);color:#fff}.restaurant-card.compact{grid-template-columns:104px minmax(0,1fr)}.restaurant-card.compact:not(:has(.restaurant-photo)){grid-template-columns:1fr}.restaurant-card.compact .restaurant-card__body{padding:.9rem}.restaurant-card.compact h3{font-size:1.3rem}.restaurant-card.compact .restaurant-photo :global(img){aspect-ratio:1/1}.restaurant-card.compact .restaurant-price{border:0;padding:0}.restaurant-card.compact .restaurant-actions{display:none}.restaurant-card.featured{border-color:var(--gold);box-shadow:0 14px 34px #162d291c}@media(max-width:600px){.restaurant-card:has(.restaurant-photo),.restaurant-card.compact{grid-template-columns:1fr}.restaurant-card.compact .restaurant-photo{max-height:150px}.restaurant-photo :global(img){aspect-ratio:16/9}.restaurant-card__body{padding:1rem}}
+</style>

@@ -1,9 +1,11 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro'; import { days, getDestination } from '../../data/trip';
 import DayGuide from '../../components/itinerary/DayGuide.astro';
+import DayNavigation from '../../components/itinerary/DayNavigation.astro';
 import { monuments, reservations, restaurants } from '../../data/trip';
 import { itineraryImages } from '../../data/itinerary-images';
+import { getRestaurantRecommendations } from '../../data/marrakech-restaurant-recommendations';
 export function getStaticPaths() { return days.map(day => ({ params: { id: day.id }, props: { day } })); }
 const { day } = Astro.props; const destination = getDestination(day.destinationId); const index = days.findIndex(d => d.id === day.id); const previous = days[index-1]; const next = days[index+1];
 ---
-<BaseLayout title={day.title}><DayGuide day={day} destination={destination} image={itineraryImages[day.id]} reservations={reservations.filter((reservation) => reservation.dayId === day.id)} monuments={monuments.filter((monument) => monument.dayId === day.id)} restaurants={restaurants.filter((restaurant) => restaurant.recommendedDays.includes(day.id))} /><nav class="day-navigation" aria-label="Entre jornadas">{previous ? <a href={`/itinerario/${previous.id}/`}>← Día anterior</a> : <span/>}<a href="/itinerario/">Vista general</a>{next ? <a href={`/itinerario/${next.id}/`}>Día siguiente →</a> : <span/>}</nav></BaseLayout>
+<BaseLayout title={day.title}><DayGuide day={day} destination={destination} image={itineraryImages[day.id]} reservations={reservations.filter((reservation) => reservation.dayId === day.id)} monuments={monuments.filter((monument) => monument.dayId === day.id)} restaurants={restaurants} restaurantRecommendations={getRestaurantRecommendations(day.id)} /><DayNavigation day={day} previous={previous} next={next} position={index + 1} images={itineraryImages} /></BaseLayout>

@@ -1,0 +1,19 @@
+---
+import type { MarrakechRestaurant, RestaurantRecommendation } from '../../types/travel';
+import RestaurantCard from '../restaurants/RestaurantCard.astro';
+interface Props { recommendations: RestaurantRecommendation[]; restaurants: MarrakechRestaurant[] }
+const { recommendations, restaurants } = Astro.props;
+const meals = { almuerzo:'Almuerzo', cafe:'Café', merienda:'Merienda', atardecer:'Atardecer', cena:'Cena' };
+const groups = Object.keys(meals).map(meal => ({ meal: meal as keyof typeof meals, items: recommendations.filter(item => item.meal === meal) })).filter(group => group.items.length);
+const restaurant = (id:string) => restaurants.find(item => item.id === id);
+---
+
+{groups.length > 0 && <section class="guide-section route-food" id="comer">
+  <p class="eyebrow">Comer cerca</p><h2>Dónde comer según nuestra ruta</h2>
+  <p class="route-food-intro">La primera propuesta acompaña el recorrido; las demás son alternativas cercanas, no un listado completo del catálogo.</p>
+  {groups.map(group => <section class="meal-group"><h3>{meals[group.meal]}</h3><div class="route-food-list">{group.items.map(recommendation => {
+    const item = restaurant(recommendation.restaurantId);
+    return item ? <div class:list={{ 'route-primary': recommendation.order === 1 }}><p class="route-reason">{recommendation.reason}</p><RestaurantCard restaurant={item} featured={recommendation.order === 1} compact={recommendation.order !== 1} /></div> : recommendation.riadOption && <article class="route-riad"><p class="eyebrow">Primera opción condicionada</p><h4>Riad Aventurine</h4><p>{recommendation.reason}</p><small>{recommendation.condition}</small></article>;
+  })}</div></section>)}
+</section>}
+<style>.route-food{background:var(--sand);max-width:none;padding-left:max(1rem,calc((100% - 1040px)/2));padding-right:max(1rem,calc((100% - 1040px)/2))}.route-food-intro{max-width:48rem;margin:0;color:var(--muted)}.meal-group{margin-top:2rem}.meal-group h3{color:var(--terra)}.route-food-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;align-items:start}.route-food-list .route-primary{grid-column:span 2}.route-reason{margin:0;padding:.7rem 1rem;background:var(--deep);color:#fff;font-size:.9rem}.route-riad{padding:1rem;background:var(--deep);color:#fff}.route-riad .eyebrow{color:var(--gold)}.route-riad h4{font-size:1.35rem;margin:.2rem 0}.route-riad small{color:#eee2d0}@media(max-width:700px){.route-food-list{grid-template-columns:1fr}.route-food-list .route-primary{grid-column:auto}}</style>

@@ -1,15 +1,121 @@
-/* Capa final: actividades clave de las jornadas. */
-.guide-priorities{background:var(--color-secondary)!important;color:var(--color-surface)!important;padding:clamp(2.5rem,5vw,4rem) max(1rem,calc((100% - 1120px)/2))!important}
-.guide-priorities .priority-heading{display:grid!important;grid-template-columns:minmax(0,1.45fr) minmax(240px,.55fr)!important;gap:clamp(1rem,4vw,4rem)!important;align-items:end!important;margin:0 0 1.5rem!important}
-.guide-priorities .priority-heading h2{max-width:760px!important;margin:.35rem 0 0!important;color:var(--color-surface)!important;font-size:clamp(2.25rem,4.8vw,4.25rem)!important;line-height:1.02!important;letter-spacing:-.035em}
-.guide-priorities .priority-heading>p{max-width:34ch!important;margin:0 0 .35rem!important;color:#f8f3e9!important;font-size:1rem!important;line-height:1.5!important}
-.guide-priorities .eyebrow{color:var(--morocco-sand)!important}
-.guide-priorities .priority-grid{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(250px,1fr))!important;gap:1rem!important}
-.guide-priorities .priority-grid article,.guide-priorities .priority-grid article:first-child{display:flex!important;flex-direction:column!important;min-height:185px!important;padding:1.25rem 1.35rem!important;background:var(--color-surface)!important;border:0!important;border-left:5px solid var(--color-primary)!important;box-shadow:var(--shadow-md)!important;color:var(--color-text)!important}
-.guide-priorities .priority-grid article:nth-child(2n){border-left-color:var(--color-accent)!important;background:#fffaf2!important}
-.guide-priorities .priority-card-top{margin:0 0 .65rem!important}
-.guide-priorities .priority-number{color:var(--color-primary)!important}
-.guide-priorities .priority-grid h3,.guide-priorities .priority-grid article:first-child h3{max-width:none!important;margin:0 0 .55rem!important;color:var(--color-text)!important;font-size:clamp(1.45rem,2.35vw,2.05rem)!important;line-height:1.1!important}
-.guide-priorities .priority-grid p{margin:0!important;color:var(--color-text-muted)!important;font-size:1rem!important;line-height:1.52!important}
-.guide-priorities .priority-grid .badge{background:#f7dfd1!important;color:#71341d!important}
-@media(max-width:700px){.guide-priorities{padding:2.25rem 1rem!important}.guide-priorities .priority-heading{display:block!important}.guide-priorities .priority-heading>p{margin-top:.8rem!important}.guide-priorities .priority-grid{grid-template-columns:1fr!important}.guide-priorities .priority-grid article,.guide-priorities .priority-grid article:first-child{min-height:0!important;padding:1.1rem!important}}
+/* Capa final: actividades clave de las jornadas (lectura premium y compacta). */
+.guide-priorities {
+  background: linear-gradient(180deg, #f7f1e7 0%, #f1e5d3 100%) !important;
+  color: var(--color-text) !important;
+  padding: clamp(2rem, 4vw, 3rem) max(1rem, calc((100% - 1080px) / 2)) !important;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.guide-priorities .eyebrow {
+  color: var(--color-primary) !important;
+}
+
+.guide-priorities .priority-heading {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) minmax(230px, .6fr) !important;
+  gap: clamp(.9rem, 3vw, 2rem) !important;
+  align-items: end !important;
+  margin: 0 0 1.1rem !important;
+}
+
+.guide-priorities .priority-heading h2 {
+  max-width: 24ch !important;
+  margin: .2rem 0 0 !important;
+  color: var(--color-text) !important;
+  font-size: clamp(1.65rem, 2.6vw, 2.5rem) !important;
+  line-height: 1.08 !important;
+  letter-spacing: -.02em !important;
+}
+
+.guide-priorities .priority-heading > p {
+  margin: 0 !important;
+  color: var(--color-text-muted) !important;
+  font-size: .96rem !important;
+  line-height: 1.45 !important;
+}
+
+.guide-priorities .priority-grid {
+  display: grid !important;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)) !important;
+  gap: .85rem !important;
+}
+
+.guide-priorities .priority-grid article,
+.guide-priorities .priority-grid article:first-child {
+  display: flex !important;
+  flex-direction: column !important;
+  min-height: 0 !important;
+  padding: 1rem 1.05rem !important;
+  background: #fff !important;
+  border: 1px solid #e6dac8 !important;
+  border-top: 4px solid var(--color-primary) !important;
+  border-left: 1px solid #e6dac8 !important;
+  border-radius: 10px !important;
+  box-shadow: 0 8px 20px rgb(48 37 31 / 8%) !important;
+  color: var(--color-text) !important;
+}
+
+.guide-priorities .priority-grid article:nth-child(2n) {
+  border-top-color: var(--color-accent) !important;
+  background: #fffdf9 !important;
+}
+
+.guide-priorities .priority-card-top {
+  margin: 0 0 .5rem !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.guide-priorities .priority-number {
+  color: var(--color-primary) !important;
+  font-size: .84rem !important;
+  font-weight: 800 !important;
+}
+
+.guide-priorities .priority-grid h3,
+.guide-priorities .priority-grid article:first-child h3 {
+  max-width: none !important;
+  margin: 0 0 .45rem !important;
+  color: var(--color-text) !important;
+  font-size: clamp(1.12rem, 1.9vw, 1.42rem) !important;
+  line-height: 1.2 !important;
+  letter-spacing: -.01em !important;
+}
+
+.guide-priorities .priority-grid p {
+  margin: 0 !important;
+  color: #5f5247 !important;
+  font-size: .95rem !important;
+  line-height: 1.48 !important;
+}
+
+.guide-priorities .priority-grid .badge {
+  background: #f8e6da !important;
+  color: #6f3420 !important;
+}
+
+@media (max-width: 700px) {
+  .guide-priorities {
+    padding: 1.4rem 1rem !important;
+  }
+
+  .guide-priorities .priority-heading {
+    grid-template-columns: 1fr !important;
+    gap: .45rem !important;
+  }
+
+  .guide-priorities .priority-heading > p {
+    font-size: .9rem !important;
+  }
+
+  .guide-priorities .priority-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .guide-priorities .priority-grid article,
+  .guide-priorities .priority-grid article:first-child {
+    padding: .9rem .85rem !important;
+  }
+}

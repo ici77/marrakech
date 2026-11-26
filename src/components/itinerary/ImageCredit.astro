@@ -1,0 +1,10 @@
+---
+import type { ItineraryImage } from '../../data/itinerary-images';
+interface Props { image: ItineraryImage }
+const { image } = Astro.props;
+---
+<p class="image-credit">Foto: <a href={image.source} target="_blank" rel="noreferrer">{image.author} · Wikimedia Commons</a> · <a href={image.licenseUrl} target="_blank" rel="noreferrer">{image.license}</a></p>
+<style>
+  .image-credit{font-size:.75rem;line-height:1.4;margin:1rem 0 0;color:#fff}
+  .image-credit a{color:inherit}
+</style>

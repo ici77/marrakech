@@ -1,0 +1,4 @@
+---
+const links = [['/','Inicio'],['/itinerario/','Diario'],['/destinos/','Explorar'],['/reservas/','Reservas'],['/mapas/','Mapas'],['/informacion/','Información útil']];
+---
+<header class="site-header"><a class="brand" href="/" aria-label="Inicio, Marruecos 2026"><span>✦</span> Marruecos <small>2026</small></a><nav class="desktop-nav" aria-label="Principal">{links.map(([href,label]) => <a href={href}>{label}</a>)}<a href="/buscar/" aria-label="Buscar">⌕</a></nav></header>

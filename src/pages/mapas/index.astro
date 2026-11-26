@@ -1,0 +1,4 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { destinations } from '../../data/trip';
+---
+<BaseLayout title="Mapas"><section class="page-intro"><p class="eyebrow">Orientación</p><h1>Mapas y rutas</h1><p>Los enlaces externos necesitan conexión; las rutas definitivas están pendientes.</p></section><section class="section destination-grid">{destinations.map(d => <article class="destination-card"><p class="eyebrow">Ruta provisional</p><h2>{d.name}</h2><p>{d.summary}</p><a class="button button-ghost" target="_blank" rel="noreferrer" href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(d.name + ', Morocco')}`}>Abrir Google Maps ↗</a></article>)}</section></BaseLayout>

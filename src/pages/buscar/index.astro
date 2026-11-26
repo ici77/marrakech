@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { destinations, days, monuments, restaurants } from '../../data/trip';
+const items = [...destinations.map(x=>({title:x.name,text:x.summary,url:`/destinos/${x.id}/`})),...days.map(x=>({title:x.title,text:x.summary,url:`/itinerario/${x.id}/`})),...monuments.map(x=>({title:x.name,text:x.cultural,url:'/monumentos/'})),...restaurants.map(x=>({title:x.name,text:x.recommendation,url:'/restaurantes/'}))];
+---
+<BaseLayout title="Buscar"><section class="page-intro"><p class="eyebrow">Índice local</p><h1>Buscar en la guía</h1><label class="search"><span>⌕</span><input autofocus data-search placeholder="Destino, actividad, restaurante…" aria-label="Buscar en la guía"/></label></section><section class="section search-results">{items.map(item=><a href={item.url} data-search-item={`${item.title} ${item.text}`}><h2>{item.title}</h2><p>{item.text}</p></a>)}</section></BaseLayout>

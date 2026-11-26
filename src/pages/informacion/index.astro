@@ -1,0 +1,4 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+<BaseLayout title="Información práctica"><section class="page-intro"><p class="eyebrow">Antes de partir</p><h1>Información práctica</h1><p>Checklist personal y secciones preparadas para documentación, clima, conectividad y contactos.</p></section><section class="section checklist" data-checklist>{['Documentación', 'Moneda y pagos', 'Conectividad', 'Equipaje', 'Recomendaciones culturales'].map((item,i)=><label><input type="checkbox" data-check={i}/><span>{item}</span><small>Pendiente de contenido verificado</small></label>)}</section></BaseLayout>

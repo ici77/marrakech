@@ -1,0 +1,60 @@
+---
+export interface TravelImageData {
+  url: string;
+  description: string;
+  author?: string;
+  source?: string;
+  license?: string;
+  licenseUrl?: string;
+}
+
+interface Props {
+  image: TravelImageData;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  priority?: boolean;
+  showCredit?: boolean;
+}
+
+const { image, class: className = '', loading = 'lazy', priority = false, showCredit = true } = Astro.props;
+const isRemote = /^https?:\/\//i.test(image.url);
+---
+
+<figure class:list={['travel-image', className]} data-travel-image data-remote={isRemote ? 'true' : 'false'} data-src={image.url}>
+  <img src={image.url} alt={image.description} loading={priority ? 'eager' : loading} decoding="async" referrerpolicy={isRemote ? 'no-referrer' : undefined} />
+  {showCredit && image.author && image.source && image.license && image.licenseUrl && <figcaption>Foto: <a href={image.source} target="_blank" rel="noreferrer">{image.author} · Wikimedia Commons</a> · <a href={image.licenseUrl} target="_blank" rel="noreferrer">{image.license}</a></figcaption>}
+</figure>
+
+<script>
+  const refreshRemoteImage = (figure: HTMLElement) => {
+    if (figure.dataset.remote !== 'true') return;
+    const image = figure.querySelector('img');
+    const source = figure.dataset.src;
+    if (!image || !source) return;
+    figure.hidden = false;
+    image.removeAttribute('src');
+    requestAnimationFrame(() => { image.src = source; });
+  };
+
+  const hideRemoteImage = (figure: HTMLElement) => {
+    if (figure.dataset.remote === 'true') figure.hidden = true;
+  };
+
+  const setup = () => {
+    const images = Array.from(document.querySelectorAll<HTMLElement>('[data-travel-image]'));
+    images.forEach((figure) => {
+      const image = figure.querySelector('img');
+      if (!image || figure.dataset.bound === 'true') return;
+      figure.dataset.bound = 'true';
+      image.addEventListener('error', () => hideRemoteImage(figure));
+      if (figure.dataset.remote === 'true' && navigator.onLine === false) hideRemoteImage(figure);
+    });
+    window.addEventListener('offline', () => images.forEach(hideRemoteImage));
+    window.addEventListener('online', () => images.forEach(refreshRemoteImage));
+  };
+  setup();
+</script>
+
+<style>
+  .travel-image{margin:0;overflow:hidden}.travel-image[hidden]{display:none!important}.travel-image img{display:block;width:100%;height:100%;object-fit:cover}.travel-image figcaption{font-size:.75rem;line-height:1.4;margin:.6rem 0 0;color:var(--muted)}.travel-image figcaption a{color:inherit}
+</style>

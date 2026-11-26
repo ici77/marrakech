@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { days } from '../../data/trip'; import DayCard from '../../components/itinerary/DayCard.astro';
+const stages = [{title:'Marrakech',range:'19—22 diciembre',items:days.slice(0,4)},{title:'Alto Atlas y desierto',range:'23—27 diciembre',items:days.slice(4,9)},{title:'Fez, Chefchaouen, Tetuán y regreso',range:'28—30 diciembre',items:days.slice(9)}];
+---
+<BaseLayout title="Itinerario"><section class="page-intro"><p class="eyebrow">La ruta completa</p><h1>El itinerario</h1><p>Los horarios, reservas y recorridos son ejemplos claramente provisionales.</p></section>{stages.map((stage,i) => <section class="section itinerary-stage"><p class="stage-number">0{i+1}</p><div><p class="eyebrow">{stage.range}</p><h2>{stage.title}</h2></div><div class="days-grid">{stage.items.map(day => <DayCard day={day}/>)}</div></section>)}</BaseLayout>

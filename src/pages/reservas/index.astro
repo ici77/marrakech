@@ -1,0 +1,4 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { reservations } from '../../data/trip'; import ReservationStatus from '../../components/ui/ReservationStatus.astro';
+---
+<BaseLayout title="Reservas"><section class="page-intro"><p class="eyebrow">Todo en un lugar</p><h1>Reservas</h1><p>Las reservas reales no se almacenan todavía en la aplicación.</p></section><section class="section">{reservations.map(r => <article class="reservation-card"><div><p class="eyebrow">{r.category} · {r.date}</p><h2>{r.title}</h2><p>{r.note}</p></div><div><ReservationStatus status={r.status}/><p>{r.travelers} viajeros</p></div></article>)}</section></BaseLayout>

@@ -1,0 +1,5 @@
+---
+import type { TripDay } from '../../types/travel'; import { getDestination } from '../../data/trip';
+const { day } = Astro.props as { day: TripDay }; const destination = getDestination(day.destinationId);
+---
+<article class="day-card"><p class="eyebrow">{new Intl.DateTimeFormat('es-ES',{weekday:'long',day:'numeric',month:'long'}).format(new Date(`${day.date}T12:00:00`))}</p><h3>{day.title}</h3><p>{destination?.name} · {day.summary}</p><a class="text-link" href={`/itinerario/${day.id}/`}>Abrir jornada <span>→</span></a></article>

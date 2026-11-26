@@ -1,0 +1,6 @@
+---
+import type { ReservationStatus as Status } from '../../types/travel';
+const { status } = Astro.props as { status: Status };
+const labels: Record<Status,string> = { confirmed:'Confirmada',paid:'Pagada',pending_payment:'Pago pendiente',pending_confirmation:'Por confirmar',planned:'Planificada',optional:'Opcional',cancelled:'Cancelada' };
+---
+<span class={`badge status-${status}`}>{labels[status]}</span>

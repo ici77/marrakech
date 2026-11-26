@@ -1,0 +1,5 @@
+---
+import type { Activity } from '../../types/travel'; import PriorityBadge from '../ui/PriorityBadge.astro';
+const { activities } = Astro.props as { activities: Activity[] };
+---
+<ol class="timeline">{activities.map((item) => <li><div class="timeline-time">{item.start ?? 'Flexible'}</div><details><summary><strong>{item.title}</strong><PriorityBadge priority={item.priority} /></summary><p>{item.description}</p><dl><div><dt>Duración</dt><dd>{item.start && item.end ? `${item.start}–${item.end}` : 'Pendiente'}</dd></div><div><dt>Estado</dt><dd>Provisional</dd></div></dl></details></li>)}</ol>

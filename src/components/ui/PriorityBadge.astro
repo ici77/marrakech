@@ -1,0 +1,6 @@
+---
+import type { Priority } from '../../types/travel';
+const { priority } = Astro.props as { priority: Priority };
+const labels = { essential: 'Imprescindible', recommended: 'Recomendable', optional: 'Si hay tiempo' };
+---
+<span class={`badge priority-${priority}`}>{labels[priority]}</span>

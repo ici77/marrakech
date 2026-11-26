@@ -1,0 +1,5 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'; import { destinations } from '../../data/trip';
+export function getStaticPaths() { return destinations.map(destination => ({params:{id:destination.id},props:{destination}})); } const { destination } = Astro.props;
+---
+<BaseLayout title={destination.name}><section class="day-hero"><div><p class="eyebrow">{destination.region}</p><h1>{destination.name}</h1><p>{destination.summary}</p><div class="notice">Contenido cultural y recomendaciones pendientes de incorporar y verificar.</div></div><img class="day-image" src={destination.image} alt="" /></section></BaseLayout>

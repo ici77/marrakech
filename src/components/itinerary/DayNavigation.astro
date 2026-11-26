@@ -1,18 +1,232 @@
 ---
 import type { TripDay } from '../../types/travel';
-import type { ItineraryImage } from '../../data/itinerary-images';
-import TravelImage from '../media/TravelImage.astro';
-interface Props { day: TripDay; previous?: TripDay | undefined; next?: TripDay | undefined; position: number; images: Record<string, ItineraryImage> }
-const { previous, next, position, images } = Astro.props;
-const date = (item: TripDay) => new Intl.DateTimeFormat('es-ES', { day:'numeric', month:'long' }).format(new Date(`${item.date}T12:00:00`));
+
+interface Props {
+  previous?: TripDay | undefined;
+  next?: TripDay | undefined;
+  position: number;
+}
+
+const { previous, next, position } = Astro.props;
+const date = (item: TripDay) =>
+  new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long' }).format(new Date(`${item.date}T12:00:00`));
 ---
 <section class="day-navigation" aria-label="Entre jornadas">
-  <p class="eyebrow">La ruta continúa</p><h2>Seguimos descubriendo Marruecos</h2>
-  <div class:list={['journey-cards', { 'only-next': !previous, 'only-previous': !next }]}>
-    {previous && <a class="journey-card previous" href={`/itinerario/${previous.id}/`}>{images[previous.id] && <TravelImage image={images[previous.id]!} class="journey-card__image" loading="lazy" showCredit={false} />}<div class="journey-card__content"><p class="journey-card__label">← Día anterior</p><p class="journey-card__number">Jornada {position - 1} · {date(previous)}</p><h3>{previous.title}</h3><p>{previous.summary}</p></div></a>}
-    {next && <a class="journey-card next" href={`/itinerario/${next.id}/`}>{images[next.id] && <TravelImage image={images[next.id]!} class="journey-card__image" loading="lazy" showCredit={false} />}<div class="journey-card__content"><p class="journey-card__label">Día siguiente →</p><p class="journey-card__number">Jornada {position + 1} · {date(next)}</p><h3>{next.title}</h3><p>{next.summary}</p></div></a>}
-    {!next && <aside class="journey-farewell"><p class="eyebrow">Fin del recorrido</p><p>Hasta pronto, Marruecos</p></aside>}
+  <div class="journey-head">
+    <p class="eyebrow">Familia Batán Contreras</p>
+    <h2>Sigue descubriendo Marruecos</h2>
+    <p class="journey-progress">Jornada {position} de 12</p>
   </div>
-  <div class="journey-footer"><p>Jornada {position} de 12</p><ol aria-label={`Jornada ${position} de 12`}>{Array.from({length:12}, (_, index) => <li class:list={{ active:index + 1 === position }}><span class="sr-only">Día {index + 1}{index + 1 === position ? ', actual' : ''}</span></li>)}</ol><a class="button" href="/itinerario/">Ver itinerario completo</a></div>
+
+  <nav class="journey-hub" aria-label="Navegación de jornadas">
+    {previous && (
+      <a class="journey-card previous" href={`/itinerario/${previous.id}/`}>
+        <div class="journey-card__content">
+          <p class="journey-card__label">← Día anterior</p>
+          <h3>{previous.title}</h3>
+          <p class="journey-card__meta">Jornada {position - 1} · {date(previous)}</p>
+        </div>
+      </a>
+    )}
+    {!previous && <span class="journey-card placeholder" aria-hidden="true"></span>}
+
+    <a class="journey-overview" href="/itinerario/">Ver itinerario completo</a>
+
+    {next && (
+      <a class="journey-card next" href={`/itinerario/${next.id}/`}>
+        <div class="journey-card__content">
+          <p class="journey-card__label">Día siguiente →</p>
+          <h3>{next.title}</h3>
+          <p class="journey-card__meta">Jornada {position + 1} · {date(next)}</p>
+        </div>
+      </a>
+    )}
+    {!next && <span class="journey-card placeholder" aria-hidden="true"></span>}
+  </nav>
+
+  <ol class="journey-track" aria-label={`Jornada ${position} de 12`}>
+    {Array.from({ length: 12 }, (_, index) => (
+      <li class:list={{ active: index + 1 === position }}>
+        <span class="sr-only">Día {index + 1}{index + 1 === position ? ', actual' : ''}</span>
+      </li>
+    ))}
+  </ol>
 </section>
-<style>.day-navigation{max-width:1100px;margin:0 auto;padding:clamp(2.8rem,6vw,4.5rem) clamp(1rem,4vw,3rem)}.day-navigation>h2{margin:.25rem 0 1.4rem;color:var(--deep)}.journey-cards{display:grid;grid-template-columns:.85fr 1.15fr;gap:1rem}.journey-cards.only-next,.journey-cards.only-previous{grid-template-columns:minmax(0,1.15fr);max-width:720px;margin-left:auto;margin-right:auto}.journey-card{display:grid;grid-template-columns:42% 1fr;min-height:200px;text-decoration:none;overflow:hidden;background:var(--white);border:1px solid var(--line);color:var(--ink)}.journey-card.next{background:var(--deep);border-color:var(--deep);color:#fff}.journey-card__image{height:100%;min-height:200px}.journey-card__image :global(img){height:100%;min-height:200px;aspect-ratio:auto}.journey-card__content{padding:1.1rem;display:flex;flex-direction:column}.journey-card__label,.journey-card__number{margin:0;font-size:.75rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.journey-card__label{color:var(--terra)}.next .journey-card__label{color:var(--gold)}.journey-card__number{margin-top:.65rem;color:var(--muted)}.next .journey-card__number{color:#dce4df}.journey-card h3{font-size:clamp(1.3rem,2.4vw,2rem);line-height:1.08;margin:.4rem 0}.journey-card__content>p:last-child{font-size:.88rem;line-height:1.45;margin:0}.journey-card:hover,.journey-card:focus-visible{transform:translateY(-3px);box-shadow:0 14px 30px #183d3520}.journey-card:focus-visible{outline:3px solid var(--gold);outline-offset:3px}.journey-farewell{display:grid;place-items:center;min-height:200px;padding:1rem;text-align:center;background:var(--deep);color:#fff}.journey-farewell .eyebrow{color:var(--gold)}.journey-farewell p:last-child{font:clamp(1.8rem,4vw,3rem) var(--font-serif);margin:0}.journey-footer{display:grid;justify-items:center;gap:.8rem;margin-top:1.5rem;text-align:center}.journey-footer p{margin:0;font-weight:750;color:var(--deep)}.journey-footer ol{display:grid;grid-template-columns:repeat(12,1fr);gap:.28rem;width:min(360px,100%);padding:0;margin:0;list-style:none}.journey-footer li{height:5px;background:var(--beige)}.journey-footer li.active{background:var(--terra)}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}@media(max-width:700px){.journey-cards{grid-template-columns:1fr}.journey-card{grid-template-columns:38% 1fr;min-height:170px}.journey-card__image,.journey-card__image :global(img){min-height:170px}.journey-card__content{padding:1rem}.journey-card__content>p:last-child{display:none}.journey-card.next{order:-1}.journey-farewell{min-height:130px}}</style>
+
+<style>
+  .day-navigation {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: clamp(1.4rem, 3.5vw, 2.1rem) clamp(1rem, 4vw, 3rem);
+    border-top: 1px solid var(--line);
+  }
+
+  .journey-head {
+    text-align: center;
+    margin-bottom: .9rem;
+  }
+
+  .journey-head h2 {
+    margin: .15rem 0;
+    color: var(--deep);
+    font-size: clamp(1.25rem, 2.2vw, 1.7rem);
+    line-height: 1.1;
+  }
+
+  .journey-head .eyebrow {
+    margin: 0;
+    font-size: .68rem;
+  }
+
+  .journey-progress {
+    margin: .25rem 0 0;
+    font-size: .85rem;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .journey-hub {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    align-items: center;
+    gap: .7rem;
+  }
+
+  .journey-card {
+    display: block;
+    text-decoration: none;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    color: var(--ink);
+    transition: border-color .2s ease, box-shadow .2s ease;
+    min-height: 90px;
+  }
+
+  .journey-card.next {
+    border-color: #24574d;
+  }
+
+  .journey-card__content {
+    padding: .65rem .75rem;
+  }
+
+  .journey-card__label,
+  .journey-card__meta {
+    margin: 0;
+    font-size: .67rem;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 700;
+  }
+
+  .journey-card__label {
+    color: var(--terra);
+  }
+
+  .next .journey-card__label {
+    color: var(--green);
+  }
+
+  .journey-card h3 {
+    margin: .2rem 0;
+    font-size: .98rem;
+    line-height: 1.2;
+    color: var(--deep);
+  }
+
+  .journey-card:hover,
+  .journey-card:focus-visible {
+    border-color: var(--gold);
+    box-shadow: 0 8px 18px #183d3518;
+  }
+
+  .journey-card:focus-visible {
+    outline: 3px solid var(--gold);
+    outline-offset: 2px;
+  }
+
+  .journey-card.placeholder {
+    visibility: hidden;
+  }
+
+  .journey-overview {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: .55rem .8rem;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--white);
+    text-decoration: none;
+    color: var(--deep);
+    font-size: .82rem;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  .journey-overview:hover,
+  .journey-overview:focus-visible {
+    border-color: var(--gold);
+  }
+
+  .journey-track {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap: .2rem;
+    width: 100%;
+    margin: 0;
+    padding: .8rem 0 0;
+    list-style: none;
+  }
+
+  .journey-track li {
+    height: 4px;
+    border-radius: 999px;
+    background: var(--beige);
+  }
+
+  .journey-track li.active {
+    background: var(--terra);
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  @media (max-width: 700px) {
+    .day-navigation {
+      padding-bottom: 2.2rem;
+    }
+
+    .journey-hub {
+      grid-template-columns: 1fr;
+    }
+
+    .journey-overview {
+      order: -1;
+      width: 100%;
+    }
+
+    .journey-card {
+      min-height: 82px;
+    }
+
+    .journey-card__content {
+      padding: .55rem .65rem;
+    }
+
+    .journey-card.placeholder {
+      display: none;
+    }
+  }
+</style>

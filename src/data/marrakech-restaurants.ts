@@ -10,7 +10,7 @@ const rows: Seed[] = [
 ['Chez Hicham','Medina central','Pendiente',['tradicional','economico'],'alternativa',['19-diciembre','20-diciembre'],['rahba'],'Alternativa rápida para el día de llegada y para el 20 si el tiempo antes de Agafay es limitado.','Medina'],
 ['Coco Rooftop','Jemaa el-Fna','≈159 € / 5',['terraza','internacional'],'terraza',['19-diciembre'],['jemaa'],'Terraza planteada para tomar algo al atardecer tras los zocos.','Atardecer'],
 ['Amornakoch','Marrakech','Pendiente',['tradicional'],'opcional',[],[],'Establecimiento anotado en el documento sin zona ni precio concretos.','Por verificar'],
-['Dar Essalam','Medina sur','142,90 € / 5',['tradicional','premium'],'reservado',['19-diciembre'],['jemaa'],'Cena prevista para la primera noche; las bebidas van aparte.','Cena marroquí'],
+['Dar Essalam','Medina sur','142,90 € / 5',['tradicional','premium'],'reservado',['19-diciembre'],['jemaa'],'Cena con espectáculo confirmada a las 20:00; menú con un plato principal y bebidas aparte. Acudir directamente al restaurante.','Cena marroquí y espectáculo'],
 ['La Fontaine des Épices','Medina norte','175 € / 5',['terraza','tradicional'],'reservado',['22-diciembre'],['dar-el-bacha','jardin-secret'],'Mesa prevista tras Dar El Bacha, antes de Le Jardin Secret.','Medina norte'],
 ['Bacha Coffee','Medina norte','desde 20 € / 5',['cafeteria','premium'],'cafeteria',['22-diciembre'],['dar-el-bacha'],'Pausa de café vinculada al paso por Dar El Bacha, solo si hay mesa.','Café'],
 ['L’Mida','Medina central','90–140 € / 5',['premium','terraza'],'opcional',['19-diciembre'],['rahba'],'Alternativa de precio medio-alto para comer en la medina.','Medina'],

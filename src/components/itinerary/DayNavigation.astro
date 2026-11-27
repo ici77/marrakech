@@ -1,195 +1,331 @@
+
 ---
 import type { TripDay } from '../../types/travel';
 
 interface Props {
-  previous?: TripDay | undefined;
-  next?: TripDay | undefined;
+  previous: TripDay | undefined;
+  next: TripDay | undefined;
   position: number;
+  total?: number;
 }
 
-const { previous, next, position } = Astro.props;
+const {
+  previous,
+  next,
+  position,
+  total = 12
+} = Astro.props;
+
 const date = (item: TripDay) =>
-  new Intl.DateTimeFormat('es-ES', { day: 'numeric', month: 'long' }).format(new Date(`${item.date}T12:00:00`));
+  new Intl.DateTimeFormat('es-ES', {
+    day: 'numeric',
+    month: 'long'
+  }).format(new Date(`${item.date}T12:00:00`));
 ---
-<section class="day-navigation" aria-label="Entre jornadas">
-  <div class="journey-head">
+
+<section class="day-navigation" aria-label="Navegación entre jornadas">
+
+  <!-- Encabezado -->
+  <header class="journey-head">
     <p class="eyebrow">Familia Batán Contreras</p>
+
     <h2>Sigue descubriendo Marruecos</h2>
-    <p class="journey-progress">Jornada {position} de 12</p>
-  </div>
 
-  <nav class="journey-hub" aria-label="Navegación de jornadas">
-    {previous && (
-      <a class="journey-card previous" href={`/itinerario/${previous.id}/`}>
-        <div class="journey-card__content">
-          <p class="journey-card__label">← Día anterior</p>
-          <h3>{previous.title}</h3>
-          <p class="journey-card__meta">Jornada {position - 1} · {date(previous)}</p>
-        </div>
-      </a>
-    )}
-    {!previous && <span class="journey-card placeholder" aria-hidden="true"></span>}
+    <p class="journey-progress">
+      Jornada <strong>{position}</strong> de {total}
+    </p>
+  </header>
 
-    <a class="journey-overview" href="/itinerario/">Ver itinerario completo</a>
-
-    {next && (
-      <a class="journey-card next" href={`/itinerario/${next.id}/`}>
-        <div class="journey-card__content">
-          <p class="journey-card__label">Día siguiente →</p>
-          <h3>{next.title}</h3>
-          <p class="journey-card__meta">Jornada {position + 1} · {date(next)}</p>
-        </div>
-      </a>
-    )}
-    {!next && <span class="journey-card placeholder" aria-hidden="true"></span>}
-  </nav>
-
-  <ol class="journey-track" aria-label={`Jornada ${position} de 12`}>
-    {Array.from({ length: 12 }, (_, index) => (
-      <li class:list={{ active: index + 1 === position }}>
-        <span class="sr-only">Día {index + 1}{index + 1 === position ? ', actual' : ''}</span>
+  <!-- Indicador de progreso -->
+  <ol
+    class="journey-track"
+    style={`--total: ${total}`}
+    aria-label="Progreso del viaje"
+  >
+    {Array.from({ length: total }, (_, index) => (
+      <li
+        class:list={{
+          completed: index + 1 < position,
+          active: index + 1 === position
+        }}
+        aria-current={index + 1 === position ? 'step' : undefined}
+      >
+        <span class="sr-only">
+          Jornada {index + 1}
+          {index + 1 === position ? ', actual' : ''}
+        </span>
       </li>
     ))}
   </ol>
+
+  <!-- Navegación principal -->
+  <nav
+    class="journey-hub"
+    aria-label="Jornada anterior y siguiente"
+  >
+    {previous && (
+      <a
+        class="journey-card previous"
+        href={`/itinerario/${previous.id}/`}
+        rel="prev"
+      >
+        <span class="journey-card__label">
+          <span class="arrow" aria-hidden="true">←</span>
+          Día anterior
+        </span>
+
+        <h3>{previous.title}</h3>
+
+        <span class="journey-card__meta">
+          {date(previous)}
+        </span>
+      </a>
+    )}
+
+    {next && (
+      <a
+        class="journey-card next"
+        href={`/itinerario/${next.id}/`}
+        rel="next"
+      >
+        <span class="journey-card__label">
+          Día siguiente
+          <span class="arrow" aria-hidden="true">→</span>
+        </span>
+
+        <h3>{next.title}</h3>
+
+        <span class="journey-card__meta">
+          {date(next)}
+        </span>
+      </a>
+    )}
+  </nav>
+
+  <!-- Acceso al itinerario completo -->
+  <div class="journey-footer">
+    <a class="journey-overview" href="/itinerario/">
+      <svg
+        width="19"
+        height="19"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="1.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3z" />
+        <path d="M9 3v15M15 6v15" />
+      </svg>
+
+      Ver itinerario completo
+    </a>
+  </div>
+
 </section>
 
 <style>
+  .day-navigation,
+  .day-navigation * {
+    box-sizing: border-box;
+  }
+
   .day-navigation {
+    width: 100%;
     max-width: 980px;
-    margin: 0 auto;
-    padding: clamp(1.4rem, 3.5vw, 2.1rem) clamp(1rem, 4vw, 3rem);
+    margin: 2rem auto 0;
+    padding: clamp(1.25rem, 4vw, 2.5rem);
     border-top: 1px solid var(--line);
   }
 
+  /* Encabezado */
+
   .journey-head {
     text-align: center;
-    margin-bottom: .9rem;
-  }
-
-  .journey-head h2 {
-    margin: .15rem 0;
-    color: var(--deep);
-    font-size: clamp(1.25rem, 2.2vw, 1.7rem);
-    line-height: 1.1;
+    margin-bottom: 1.25rem;
   }
 
   .journey-head .eyebrow {
+    margin: 0 0 .5rem;
+    color: var(--color-accent);
+    font-size: .7rem;
+    font-weight: 700;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+  }
+
+  .journey-head h2 {
     margin: 0;
-    font-size: .68rem;
+    color: var(--color-primary);
+    font-size: clamp(1.25rem, 3vw, 1.85rem);
+    line-height: 1.2;
   }
 
   .journey-progress {
-    margin: .25rem 0 0;
-    font-size: .85rem;
+    margin: .5rem 0 0;
     color: var(--muted);
-    font-weight: 700;
+    font-size: .875rem;
   }
+
+  /* Indicador de progreso */
+
+  .journey-track {
+    display: grid;
+    grid-template-columns: repeat(var(--total), minmax(0, 1fr));
+    gap: 4px;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .journey-track li {
+    height: 5px;
+    border-radius: 999px;
+    background: var(--color-border);
+  }
+
+  .journey-track li.completed {
+    background: var(--color-primary-soft);
+    opacity: 1;
+  }
+
+  .journey-track li.active {
+    background: var(--color-accent);
+  }
+
+  /* Cuadrícula de navegación */
 
   .journey-hub {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
-    align-items: center;
-    gap: .7rem;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
   }
 
+  /* Tarjetas */
+
   .journey-card {
-    display: block;
-    text-decoration: none;
-    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: .65rem;
+    min-width: 0;
+    min-height: 130px;
+    padding: clamp(.85rem, 2.5vw, 1.4rem);
     border: 1px solid var(--line);
-    background: var(--white);
-    color: var(--ink);
-    transition: border-color .2s ease, box-shadow .2s ease;
-    min-height: 90px;
+    border-radius: 14px;
+    background: var(--color-surface);
+    color: var(--color-primary);
+    text-decoration: none;
+
+    transition:
+      transform .2s ease,
+      box-shadow .2s ease,
+      border-color .2s ease;
+  }
+
+  .journey-card.previous {
+    grid-column: 1;
   }
 
   .journey-card.next {
-    border-color: #24574d;
-  }
-
-  .journey-card__content {
-    padding: .65rem .75rem;
-  }
-
-  .journey-card__label,
-  .journey-card__meta {
-    margin: 0;
-    font-size: .67rem;
-    letter-spacing: .05em;
-    text-transform: uppercase;
-    color: var(--muted);
-    font-weight: 700;
+    grid-column: 2;
+    text-align: right;
+    background: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-surface);
   }
 
   .journey-card__label {
-    color: var(--terra);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    color: var(--color-primary);
+    font-size: .75rem;
+    font-weight: 700;
+    letter-spacing: .04em;
+    text-transform: uppercase;
   }
 
   .next .journey-card__label {
-    color: var(--green);
+    justify-content: flex-end;
+    color: var(--color-surface);
+  }
+
+  .arrow {
+    font-size: 1.4rem;
+    line-height: 1;
   }
 
   .journey-card h3 {
-    margin: .2rem 0;
-    font-size: .98rem;
-    line-height: 1.2;
-    color: var(--deep);
+    margin: 0;
+    color: inherit;
+    font-size: clamp(.95rem, 2vw, 1.15rem);
+    line-height: 1.35;
+    overflow-wrap: anywhere;
   }
 
-  .journey-card:hover,
-  .journey-card:focus-visible {
-    border-color: var(--gold);
-    box-shadow: 0 8px 18px #183d3518;
+  .journey-card__meta {
+    color: var(--color-text-muted);
+    font-size: .8rem;
+    line-height: 1.4;
   }
 
-  .journey-card:focus-visible {
-    outline: 3px solid var(--gold);
-    outline-offset: 2px;
+  .next .journey-card__meta {
+    color: color-mix(in srgb, var(--color-surface) 84%, var(--color-primary-soft));
   }
 
-  .journey-card.placeholder {
-    visibility: hidden;
+  /* Interacción */
+
+  @media (hover: hover) {
+    .journey-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--color-accent);
+      box-shadow: var(--shadow-md);
+    }
+  }
+
+  .journey-card:focus-visible,
+  .journey-overview:focus-visible {
+    outline: 3px solid var(--color-highlight);
+    outline-offset: 4px;
+  }
+
+  /* Enlace al itinerario */
+
+  .journey-footer {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
   }
 
   .journey-overview {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: .55rem .8rem;
-    border-radius: 999px;
-    border: 1px solid var(--line);
-    background: var(--white);
-    text-decoration: none;
-    color: var(--deep);
-    font-size: .82rem;
+    gap: .6rem;
+    min-height: 44px;
+    padding: .6rem 1rem;
+    color: var(--color-primary);
+    font-size: .875rem;
     font-weight: 700;
-    white-space: nowrap;
+    text-decoration: none;
+    border-radius: 8px;
   }
 
-  .journey-overview:hover,
-  .journey-overview:focus-visible {
-    border-color: var(--gold);
+  .journey-overview:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
-  .journey-track {
-    display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    gap: .2rem;
-    width: 100%;
-    margin: 0;
-    padding: .8rem 0 0;
-    list-style: none;
+  /* Primera y última jornada */
+
+  .journey-card:only-child {
+    grid-column: 1 / -1;
   }
 
-  .journey-track li {
-    height: 4px;
-    border-radius: 999px;
-    background: var(--beige);
-  }
-
-  .journey-track li.active {
-    background: var(--terra);
-  }
+  /* Accesibilidad */
 
   .sr-only {
     position: absolute;
@@ -203,30 +339,53 @@ const date = (item: TripDay) =>
     border: 0;
   }
 
-  @media (max-width: 700px) {
+  /* Responsive */
+
+  @media (max-width: 600px) {
     .day-navigation {
-      padding-bottom: 2.2rem;
+      margin-top: 1.5rem;
+      padding: 1.25rem .85rem 1.5rem;
     }
 
+    .journey-hub {
+      gap: .6rem;
+    }
+
+    .journey-card {
+      min-height: 125px;
+      padding: .8rem;
+      border-radius: 10px;
+    }
+
+    .journey-card__label {
+      font-size: .68rem;
+      letter-spacing: 0;
+      gap: .3rem;
+    }
+
+    .journey-card__meta {
+      font-size: .75rem;
+    }
+  }
+
+  @media (max-width: 340px) {
     .journey-hub {
       grid-template-columns: 1fr;
     }
 
-    .journey-overview {
-      order: -1;
-      width: 100%;
+    .journey-card.previous,
+    .journey-card.next {
+      grid-column: 1;
     }
+  }
 
+  @media (prefers-reduced-motion: reduce) {
     .journey-card {
-      min-height: 82px;
+      transition: none;
     }
 
-    .journey-card__content {
-      padding: .55rem .65rem;
-    }
-
-    .journey-card.placeholder {
-      display: none;
+    .journey-card:hover {
+      transform: none;
     }
   }
 </style>

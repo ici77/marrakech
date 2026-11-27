@@ -2,5 +2,43 @@
 const primary = [['/itinerario/','Itinerario'],['/reservas/','Reservas'],['/mapas/','Mapas'],['/presupuesto/','Presupuesto']];
 const secondary = [['/destinos/','Destinos y cultura'],['/restaurantes/','Restaurantes'],['/monumentos/','Monumentos'],['/informacion/','Información práctica'],['/buscar/','Buscar en la guía']];
 ---
-<header class="site-header"><a class="brand" href="/" aria-label="Inicio, Marruecos 2026"><span>✦</span> Marruecos <small>2026</small></a><nav class="desktop-nav" aria-label="Principal">{primary.map(([href,label]) => <a href={href}>{label}</a>)}<details class="more-nav"><summary>Más <span aria-hidden="true">⌄</span></summary><div>{secondary.map(([href,label])=><a href={href}>{label}</a>)}</div></details><a class="search-link" href="/buscar/" aria-label="Buscar en la guía">⌕</a></nav></header>
-<style>.site-header{gap:1rem}.desktop-nav{margin-left:auto}.desktop-nav>a,.more-nav summary{min-height:44px;display:inline-flex;align-items:center}.more-nav{position:relative}.more-nav summary{list-style:none;cursor:pointer;font-size:.9rem;font-weight:650}.more-nav summary::-webkit-details-marker{display:none}.more-nav[open] summary{color:var(--color-primary)}.more-nav>div{position:absolute;top:calc(100% + .6rem);right:0;z-index:20;display:grid;min-width:220px;padding:.45rem;background:var(--color-surface);border:1px solid var(--color-border);box-shadow:var(--shadow-md)}.more-nav>div a{padding:.6rem .7rem;text-decoration:none;font-size:.9rem}.more-nav>div a:hover{background:var(--color-background)}.search-link{font-size:1.35rem}@media(max-width:850px){.desktop-nav{gap:.8rem}.desktop-nav>a{font-size:.8rem}}@media(max-width:700px){.site-header{height:62px}.desktop-nav{display:none}}</style>
+<header class="site-header">
+  <a class="brand" href="/" aria-label="Inicio, Marruecos 2026"><span>✦</span> Marruecos <small>2026</small></a>
+  <nav class="desktop-nav" aria-label="Principal">
+    {primary.map(([href,label]) => <a href={href}>{label}</a>)}
+    <details class="more-nav">
+      <summary>Más <span aria-hidden="true">⌄</span></summary>
+      <div>{secondary.map(([href,label])=><a href={href}>{label}</a>)}</div>
+    </details>
+    <a class="search-link" href="/buscar/" aria-label="Buscar en la guía">⌕</a>
+  </nav>
+  <details class="mobile-menu" aria-label="Menú principal móvil">
+    <summary aria-label="Abrir menú">☰<span>Menú</span></summary>
+    <div>
+      {[...primary, ...secondary].map(([href,label]) => <a href={href}>{label}</a>)}
+    </div>
+  </details>
+</header>
+<style>
+  .site-header{gap:1rem}
+  .desktop-nav{margin-left:auto}
+  .desktop-nav>a,.more-nav summary{min-height:44px;display:inline-flex;align-items:center}
+  .more-nav{position:relative}
+  .more-nav summary{list-style:none;cursor:pointer;font-size:.9rem;font-weight:650}
+  .more-nav summary::-webkit-details-marker{display:none}
+  .more-nav[open] summary{color:var(--color-primary)}
+  .more-nav>div{position:absolute;top:calc(100% + .6rem);right:0;z-index:20;display:grid;min-width:220px;padding:.45rem;background:var(--color-surface);border:1px solid var(--color-border);box-shadow:var(--shadow-md)}
+  .more-nav>div a{padding:.6rem .7rem;text-decoration:none;font-size:.9rem}
+  .more-nav>div a:hover{background:var(--color-background)}
+  .search-link{font-size:1.35rem}
+  .mobile-menu{display:none;margin-left:auto;position:relative}
+  .mobile-menu summary{display:inline-flex;align-items:center;justify-content:center;gap:.35rem;min-height:44px;min-width:44px;padding:.35rem .6rem;border:1px solid var(--color-border);background:var(--color-surface);list-style:none;cursor:pointer;font-weight:700;font-size:1.05rem;line-height:1;color:var(--color-primary)}
+  .mobile-menu summary::-webkit-details-marker{display:none}
+  .mobile-menu summary span{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+  .mobile-menu[open] summary{border-color:var(--color-accent)}
+  .mobile-menu>div{position:absolute;top:calc(100% + .5rem);right:0;z-index:25;display:grid;width:min(270px,calc(100vw - 1rem));padding:.45rem;background:var(--color-surface);border:1px solid var(--color-border);box-shadow:var(--shadow-lg)}
+  .mobile-menu>div a{padding:.7rem .75rem;text-decoration:none;font-size:.92rem}
+  .mobile-menu>div a:active{background:var(--color-background)}
+  @media(max-width:850px){.desktop-nav{gap:.8rem}.desktop-nav>a{font-size:.8rem}}
+  @media(max-width:700px){.site-header{height:62px}.desktop-nav{display:none}.mobile-menu{display:block}}
+</style>
